@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { getInventories } from '../api/StoreApi';
 
 export default function StoreInventory() {
-  const classes = useStyles();
+  const classes = useStyles()
 
   useEffect(() => {
     getStoreInventories()

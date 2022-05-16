@@ -1,5 +1,5 @@
-import React from 'react';
-import './App.css';
+import React from 'react'
+import './App.css'
 import StoreInventory from "./components/StoreInventory"
 
 function App() {
@@ -12,4 +12,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
