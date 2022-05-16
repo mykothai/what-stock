@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
       "dom",
       "dom.iterable",
@@ -21,6 +21,15 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "frontend/src"
-  ]
+    "src/**/*"
+  ],
+  "eslintConfig": {
+    "plugins": [
+      "react-hooks"
+    ],
+    "rules": {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn"
+    }
+  }
 }
