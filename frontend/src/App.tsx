@@ -1,15 +1,17 @@
 import React from 'react'
 import './App.css'
 import StoreInventory from "./components/StoreInventory"
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <StoreInventory/>
-      </header>
-    </div>
-  );
+    <BrowserRouter>
+      <Routes> 
+        <Route path='/' element={<></>}/>
+        <Route path='/inventories' element={<StoreInventory/>}/>
+      </Routes>
+    </BrowserRouter>
+  )
 }
 
 export default App
