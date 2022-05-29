@@ -6,8 +6,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 function App() {
   return (
     <BrowserRouter>
-      <Routes> 
-        <Route path='/' element={<></>}/>
+      <Routes>
+        {/* TODO: make a landing page */}
+        <Route path='/' element={<StoreInventory/>}/>
         <Route path='/inventories' element={<StoreInventory/>}/>
       </Routes>
     </BrowserRouter>
