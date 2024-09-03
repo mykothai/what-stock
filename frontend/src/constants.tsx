@@ -3,7 +3,7 @@
 export interface StoreInventoryData {
   bind_id: number
   bulk: number
-  color_id: number
+  // color_id: number
   color_name: string
   date_created: string
   description: string
@@ -13,8 +13,8 @@ export interface StoreInventoryData {
   no: string
   name: string
   type: string
-  category_id: number
-  my_cost: string
+  // category_id: number
+      my_cost: string
   my_weight: string
   new_or_used: string
   quantity: number
@@ -23,9 +23,9 @@ export interface StoreInventoryData {
   tier_price1: string
   tier_price2: string
   tier_price3: string
-  tier_quantity1: number
-  tier_quantity2: number
-  tier_quantity3: number
+  // tier_quantity1: number
+  // tier_quantity2: number
+  // tier_quantity3: number
   unit_price: string
 }
 
