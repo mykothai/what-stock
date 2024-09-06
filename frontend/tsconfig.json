@@ -18,11 +18,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "preserve"
   },
   "include": [
-    "src/**/*.tsx" ,
-    "src/**/*.ts" 
+    "src/**/*.tsx",
+    "src/**/*.ts"
   ],
   "eslintConfig": {
     "plugins": [
