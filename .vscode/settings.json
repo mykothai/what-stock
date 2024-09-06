@@ -1,0 +1,10 @@
+{
+  "editor.tabSize": 2,
+  "files.autoSave": "afterDelay",
+  "prettier.jsxSingleQuote": false,
+  "prettier.printWidth": 120,
+  "editor.formatOnSave": true,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+},
+}
