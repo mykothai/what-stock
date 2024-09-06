@@ -5,13 +5,13 @@ import App from './App'
 import reportWebVitals from './reportWebVitals'
 import {Provider} from 'react-redux'
 import { configureStore } from '@reduxjs/toolkit'
-import { stockReducer } from './store/reducers/stockReducer'
+import { rootReducer } from './store/reducers'
 
 const root = createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-const store = configureStore({ reducer: stockReducer })
+const store = configureStore({ reducer: rootReducer })
 
 root.render(
   <Provider store={store}>
