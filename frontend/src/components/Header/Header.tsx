@@ -1,27 +1,37 @@
 import React from 'react'
-import { AppBar, Box } from '@mui/material'
+import { AppBar, Box, IconButton, Toolbar, Typography } from '@mui/material'
 import HeaderLogo from './HeaderLogo'
 import HeaderUserBox from './HeaderUserBox'
+import MenuIcon from '@mui/icons-material/Menu'
 
-export default function Header(props: {
-  isCollapsedLayout?: any
-  headerShadow?: any
-  headerFixed?: any
-}) {
-  const { headerShadow, headerFixed } = props
-
+export default function Header() {
   return (
     <>
-      <AppBar
-        color="primary"
-        position={headerFixed ? 'fixed' : 'absolute'}
-        elevation={headerShadow ? 11 : 3}>
-        {!props.isCollapsedLayout && <HeaderLogo />}
-        <Box>
-          <HeaderUserBox />
-          <Box></Box>
-        </Box>
-      </AppBar>
+      <Box sx={{ marginBottom: '3em' }}>
+        <AppBar
+          color="primary"
+          position={'fixed'}
+          elevation={2}
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}>
+          <Toolbar>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}>
+              <MenuIcon />
+            </IconButton>
+            <Typography sx={{ flexGrow: 1, display: 'flex' }}>
+              <HeaderLogo />
+            </Typography>
+            <HeaderUserBox />
+          </Toolbar>
+        </AppBar>
+      </Box>
     </>
   )
 }

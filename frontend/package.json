@@ -34,7 +34,7 @@
     "dev": "WATCHPACK_POLLING=true react-scripts start -FAST_REFRESH=true",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "tailwind": "npx tailwindcss -i ./src/index.css -o ./src/output.css --watch"
+    "tailwind": "npx tailwindcss -i ./src/App.css -o ./src/output.css --watch"
   },
   "eslintConfig": {
     "extends": [

@@ -22,10 +22,6 @@ export default function HeaderUserBox() {
             src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.peta.org%2Ffeatures%2Freasons-never-to-drink-goats-milk%2F&psig=AOvVaw3SyY0xfJr8Mv-307kVdfOJ&ust=1653977414476000&source=images&cd=vfe&ved=0CAwQjRxqFwoTCNjcy5XIhvgCFQAAAAAdAAAAABAD"
           />
         </Box>
-        <div>
-          user name here
-          {/* TODO: add user name here */}
-        </div>
       </Button>
 
       <Menu
@@ -43,6 +39,7 @@ export default function HeaderUserBox() {
         onClose={handleClose}>
         <List>
           <ListItem>My Account</ListItem>
+          <ListItem>Log out</ListItem>
         </List>
       </Menu>
     </>
