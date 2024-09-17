@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
 import { env } from 'process'
-import OAuthMiddleware from '../auth/OAuthMiddleware'
 import OAuth from 'oauth'
 import { Request, Response } from 'express'
 
@@ -13,9 +12,9 @@ export async function getInventories(req: Request, res: Response) {
     '',
     process.env.BL_CONSUMER_KEY,
     process.env.BL_CONSUMER_SECRET,
-    '1.0',
+    process.env.OAUTH_VERSION,
     null,
-    'HMAC-SHA1'
+    process.env.BL_SIGNATURE_METHOD
   )
   oauth.get(
     `${env.BL_BASE_URL}/inventories`,
@@ -26,8 +25,6 @@ export async function getInventories(req: Request, res: Response) {
         console.log(error)
         res.send(error)
       }
-
-      console.log('get store inventory data', data)
 
       res.send(data)
     }

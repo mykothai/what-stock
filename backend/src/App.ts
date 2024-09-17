@@ -1,5 +1,6 @@
 
 import express from 'express'
+import OAuthMiddleware from './auth/OAuthMiddleware'
 
 const cors = require('cors')
 const app = express()

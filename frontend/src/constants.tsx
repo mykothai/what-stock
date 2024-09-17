@@ -1,42 +1,44 @@
 // Store Inventory
- 
 export interface StoreInventoryData {
-  bind_id: number
-  bulk: number
-  // color_id: number
-  color_name: string
-  date_created: string
-  description: string
   inventory_id: number
+  item: {
+    no: string
+    name: string
+    type: string
+    category_id: number
+  }
+  color_id: number
+  color_name: string
+  quantity: number
+  new_or_used: string
+  completeness?: string
+  unit_price: string
+  bind_id: number
+  description: string
+  remarks: string
+  bulk: number
   is_retain: boolean
   is_stock_room: boolean
-  no: string
-  name: string
-  type: string
-  // category_id: number
-      my_cost: string
-  my_weight: string
-  new_or_used: string
-  quantity: number
-  remarks: string
+  stock_room_id?: string
+  date_created: string
+  my_cost: string
   sale_rate: number
+  tier_quantity1: number
   tier_price1: string
+  tier_quantity2: number
   tier_price2: string
+  tier_quantity3: number
   tier_price3: string
-  // tier_quantity1: number
-  // tier_quantity2: number
-  // tier_quantity3: number
-  unit_price: string
+  my_weight: string
 }
 
 interface InventoryHeader {
-  disablePadding: boolean;
-  id: keyof StoreInventoryData;
-  label: string;
-  numeric: boolean;
+  disablePadding: boolean
+  id: keyof StoreInventoryData
+  label: string
+  numeric: boolean
 }
 
-// Headers for store inventory, not all columns are useful right now and are commented out
 export const InventoryHeaders: readonly InventoryHeader[] = [
   {
     id: 'inventory_id',
@@ -45,29 +47,29 @@ export const InventoryHeaders: readonly InventoryHeader[] = [
     label: 'Inventory ID',
   },
   {
-    id: 'no',
+    id: 'item',
     numeric: true,
     disablePadding: false,
     label: 'Item No.',
   },
   {
-    id: 'name',
+    id: 'item',
     numeric: false,
     disablePadding: false,
     label: 'Item Name',
   },
   {
-    id: 'type',
+    id: 'item',
     numeric: false,
     disablePadding: false,
     label: 'Item Type',
   },
-  // {
-  //   id: 'category_id',
-  //   numeric: true,
-  //   disablePadding: false,
-  //   label: 'Item Cat ID',
-  // },
+  {
+    id: 'item',
+    numeric: true,
+    disablePadding: false,
+    label: 'Item Cat ID',
+  },
   {
     id: 'description',
     numeric: false,
@@ -110,12 +112,6 @@ export const InventoryHeaders: readonly InventoryHeader[] = [
     disablePadding: false,
     label: 'Notes',
   },
-  // {
-  //   id: 'color_id',
-  //   numeric: true,
-  //   disablePadding: false,
-  //   label: 'Color ID',
-  // },
   {
     id: 'color_name',
     numeric: false,
@@ -158,40 +154,4 @@ export const InventoryHeaders: readonly InventoryHeader[] = [
     disablePadding: true,
     label: 'Parent Lot ID',
   },
-  // {
-  //   id: 'tier_price1',
-  //   numeric: true,
-  //   disablePadding: false,
-  //   label: 'tier_price1',
-  // },
-  // {
-  //   id: 'tier_price2',
-  //   numeric: true,
-  //   disablePadding: false,
-  //   label: 'tier_price2',
-  // },
-  // {
-  //   id: 'tier_price3',
-  //   numeric: true,
-  //   disablePadding: false,
-  //   label: 'tier_price3',
-  // },
-  // {
-  //   id: 'tier_quantity1',
-  //   numeric: true,
-  //   disablePadding: false,
-  //   label: 'tier_quantity1',
-  // },
-  // {
-  //   id: 'tier_quantity2',
-  //   numeric: true,
-  //   disablePadding: false,
-  //   label: 'tier_quantity2',
-  // },
-  // {
-  //   id: 'tier_quantity3',
-  //   numeric: true,
-  //   disablePadding: false,
-  //   label: 'tier_quantity3',
-  // },
-];
+]
