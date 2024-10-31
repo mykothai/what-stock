@@ -65,16 +65,16 @@ export const InventoryHeaders: readonly InventoryHeader[] = [
     label: 'Item Type',
   },
   {
-    id: 'item',
+    id: 'quantity',
     numeric: true,
     disablePadding: false,
-    label: 'Item Cat ID',
+    label: 'Quantity',
   },
   {
-    id: 'description',
-    numeric: false,
+    id: 'unit_price',
+    numeric: true,
     disablePadding: false,
-    label: 'Description',
+    label: 'Unit Price',
   },
   {
     id: 'my_cost',
@@ -95,22 +95,10 @@ export const InventoryHeaders: readonly InventoryHeader[] = [
     label: 'Condition',
   },
   {
-    id: 'quantity',
-    numeric: true,
-    disablePadding: false,
-    label: 'Quantity',
-  },
-  {
-    id: 'unit_price',
-    numeric: true,
-    disablePadding: false,
-    label: 'Unit Price',
-  },
-  {
-    id: 'remarks',
+    id: 'description',
     numeric: false,
     disablePadding: false,
-    label: 'Notes',
+    label: 'Description',
   },
   {
     id: 'color_name',
@@ -119,39 +107,9 @@ export const InventoryHeaders: readonly InventoryHeader[] = [
     label: 'Color',
   },
   {
-    id: 'is_retain',
-    numeric: false,
-    disablePadding: false,
-    label: 'Retain In Inventory',
-  },
-  {
     id: 'is_stock_room',
     numeric: false,
     disablePadding: false,
     label: 'Hidden',
-  },
-  {
-    id: 'sale_rate',
-    numeric: true,
-    disablePadding: false,
-    label: 'Sale Rate',
-  },
-  {
-    id: 'date_created',
-    numeric: false,
-    disablePadding: false,
-    label: 'Lot Date Created',
-  },
-  {
-    id: 'bulk',
-    numeric: true,
-    disablePadding: false,
-    label: 'Bulk Multiplier',
-  },
-  {
-    id: 'bind_id',
-    numeric: true,
-    disablePadding: true,
-    label: 'Parent Lot ID',
   },
 ]
