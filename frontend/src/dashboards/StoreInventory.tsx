@@ -1,11 +1,10 @@
-import Moment from 'moment'
 import React, { useState, useEffect } from 'react'
 import { getInventories } from '../api/StoreApi'
-import { alpha } from '@mui/material/styles'
+import { alpha, styled } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
+import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
@@ -22,6 +21,7 @@ import FilterListIcon from '@mui/icons-material/FilterList'
 import { visuallyHidden } from '@mui/utils'
 import { StoreInventoryData, InventoryHeaders } from '../constants'
 import { useAppSelector } from '../app/hooks'
+import { theme } from '../theme'
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -35,10 +35,11 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
 
 type Order = 'asc' | 'desc'
 
+// FIXME: sorting is not working for string values
 function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key,
-): (a: { [key in Key]: any }, b: { [key in Key]: any }) => number {
+): (a: any, b: any) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy)
@@ -73,8 +74,8 @@ function StoreInventoryHead(props: StoreInventoryProps) {
 
   return (
     <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
+      <StyledTableRow>
+        <StyledTableCell padding="checkbox">
           <Checkbox
             color="primary"
             indeterminate={numSelected > 0 && numSelected < rowCount}
@@ -84,14 +85,14 @@ function StoreInventoryHead(props: StoreInventoryProps) {
               'aria-label': 'select all items',
             }}
           />
-        </TableCell>
+        </StyledTableCell>
         {InventoryHeaders.map((inventoryHeader) => (
-          <TableCell
+          <StyledTableCell
             key={inventoryHeader.id}
             align={inventoryHeader.numeric ? 'right' : 'center'}
             padding={inventoryHeader.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === inventoryHeader.id ? order : false}>
-            <TableSortLabel
+            <StyledTableSortLabel
               active={orderBy === inventoryHeader.id}
               direction={orderBy === inventoryHeader.id ? order : 'asc'}
               onClick={createSortHandler(inventoryHeader.id)}>
@@ -101,10 +102,10 @@ function StoreInventoryHead(props: StoreInventoryProps) {
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </Box>
               ) : null}
-            </TableSortLabel>
-          </TableCell>
+            </StyledTableSortLabel>
+          </StyledTableCell>
         ))}
-      </TableRow>
+      </StyledTableRow>
     </TableHead>
   )
 }
@@ -121,6 +122,8 @@ const StoreInventoryToolbar = (props: StoreInventoryToolbarProps) => {
       sx={{
         pl: { sm: 2 },
         pr: { xs: 1, sm: 1 },
+        backgroundColor: theme.palette.primary.main,
+        font: 'white',
         ...(numSelected > 0 && {
           bgcolor: (theme) =>
             alpha(
@@ -142,7 +145,8 @@ const StoreInventoryToolbar = (props: StoreInventoryToolbarProps) => {
           sx={{ flex: '1 1 100%' }}
           variant="h6"
           id="tableTitle"
-          component="div">
+          component="div"
+          color="white">
           Inventory
         </Typography>
       )}
@@ -169,10 +173,8 @@ export default function StoreInventory() {
     React.useState<keyof StoreInventoryData>('inventory_id')
   const [selected, setSelected] = React.useState<readonly number[]>([])
   const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [rowsPerPage, setRowsPerPage] = React.useState(25)
   const [inventory, setInventory] = useState<StoreInventoryData[]>([])
-
-  const totalQuantity = useAppSelector((state) => state.stock.quantity)
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
@@ -234,15 +236,9 @@ export default function StoreInventory() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - inventory.length) : 0
 
-  useEffect(() => {
-    getStoreInventories()
-  }, [])
-
   const getStoreInventories = async () => {
     // TODO: get data from store / db
     // commented out to avoid getting rate limited by BL
-    let inventory2 = await getInventories()
-    console.log(inventory2)
 
     const inventory: { meta: any; data: StoreInventoryData[] } = {
       meta: {
@@ -1439,1157 +1435,15 @@ export default function StoreInventory() {
           tier_price3: '0.0000',
           my_weight: '0.0000',
         },
-        {
-          inventory_id: 316483609,
-          item: {
-            no: 'col240',
-            name: 'Shark Suit Guy, Series 15 &#40;Minifigure Only without Stand and Accessories&#41;',
-            type: 'MINIFIG',
-            category_id: 746,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          unit_price: '9.9900',
-          bind_id: 0,
-          description:
-            'Opened to verified contents, then immediately placed in little plastic bag.',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2022-10-10T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 96114624,
-          item: {
-            no: 'col231',
-            name: 'Clumsy Guy, Series 15 &#40;Minifigure Only without Stand and Accessories&#41;',
-            type: 'MINIFIG',
-            category_id: 746,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          unit_price: '6.4900',
-          bind_id: 0,
-          description:
-            '* comes with accessories, no plate. Blind bag opened to verify correct minifig',
-          remarks: 'SB00',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2016-06-12T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 232279410,
-          item: {
-            no: '5004388-1',
-            name: 'Nexo Knights Intro Pack polybag',
-            type: 'SET',
-            category_id: 868,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 2,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '4.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-01-18T05:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 232278758,
-          item: {
-            no: '30422-1',
-            name: 'Kai&#39;s Mini Dragon polybag',
-            type: 'SET',
-            category_id: 759,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '7.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-01-18T05:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 261616141,
-          item: {
-            no: '40221-1',
-            name: 'Fountain',
-            type: 'SET',
-            category_id: 171,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '24.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-08-31T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 261616168,
-          item: {
-            no: '40220-1',
-            name: 'Mini London Bus',
-            type: 'SET',
-            category_id: 171,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 2,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '24.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-08-31T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 232279396,
-          item: {
-            no: '30607-1',
-            name: 'Disco Batman - Tears of Batman polybag',
-            type: 'SET',
-            category_id: 768,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '19.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-01-18T05:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 232279281,
-          item: {
-            no: '30546-1',
-            name: 'Krypto saves the day polybag',
-            type: 'SET',
-            category_id: 893,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '8.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-01-18T05:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 201833838,
-          item: {
-            no: 'coltlbm17',
-            name: 'March Harriet, The LEGO Batman Movie, Series 1 &#40;Minifigure Only without Stand and Accessories&#41;',
-            type: 'MINIFIG',
-            category_id: 746,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          unit_price: '6.9900',
-          bind_id: 0,
-          description:
-            '* comes with accessories, no plate. Blind bag opened to verify correct minifig',
-          remarks: 'SB00',
-          bulk: 1,
-          is_retain: true,
-          is_stock_room: false,
-          date_created: '2020-04-29T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 201833823,
-          item: {
-            no: 'coltlbm19',
-            name: 'King Tut, The LEGO Batman Movie, Series 1 &#40;Minifigure Only without Stand and Accessories&#41;',
-            type: 'MINIFIG',
-            category_id: 746,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          unit_price: '6.9900',
-          bind_id: 0,
-          description:
-            '* comes with accessories, no plate. Blind bag opened to verify correct minifig',
-          remarks: 'SB00',
-          bulk: 1,
-          is_retain: true,
-          is_stock_room: false,
-          date_created: '2020-04-29T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 395556246,
-          item: {
-            no: '41587-1',
-            name: 'Robin',
-            type: 'SET',
-            category_id: 903,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '27.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2024-02-20T05:00:00.000Z',
-          my_cost: '13.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 261614684,
-          item: {
-            no: '41595-1',
-            name: 'Belle',
-            type: 'SET',
-            category_id: 903,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '52.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-08-31T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 261616205,
-          item: {
-            no: '5004936-1',
-            name: 'Iconic Cave',
-            type: 'SET',
-            category_id: 746,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 2,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '14.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-08-31T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 232278732,
-          item: {
-            no: '5004915',
-            name: 'Ninjago Master Wu Key Chain polybag',
-            type: 'GEAR',
-            category_id: 334,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          unit_price: '7.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-01-18T05:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 261615189,
-          item: {
-            no: '40178-1',
-            name: 'Iconic VIP Set polybag',
-            type: 'SET',
-            category_id: 976,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 3,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '24.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-08-31T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 232278524,
-          item: {
-            no: '30609-1',
-            name: 'Lloyd polybag',
-            type: 'SET',
-            category_id: 920,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 2,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '8.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-01-18T05:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 232278747,
-          item: {
-            no: '30552-1',
-            name: 'Ariel&#39;s Underwater Symphony polybag',
-            type: 'SET',
-            category_id: 878,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '15.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-01-18T05:00:00.000Z',
-          my_cost: '5.5300',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 232278775,
-          item: {
-            no: '30380-1',
-            name: 'Kylo Ren&#39;s Shuttle - Mini polybag',
-            type: 'SET',
-            category_id: 65,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 2,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '8.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-01-18T05:00:00.000Z',
-          my_cost: '5.5300',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 232279354,
-          item: {
-            no: '30450-1',
-            name: 'Royal Talon Fighter polybag',
-            type: 'SET',
-            category_id: 768,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 3,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '8.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-01-18T05:00:00.000Z',
-          my_cost: '5.5300',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 232279367,
-          item: {
-            no: '30525-1',
-            name: "The Guardians' Ship polybag",
-            type: 'SET',
-            category_id: 768,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 3,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '8.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-01-18T05:00:00.000Z',
-          my_cost: '5.5300',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 201833863,
-          item: {
-            no: 'col315',
-            name: 'Party Clown, Series 18 &#40;Minifigure Only without Stand and Accessories&#41;',
-            type: 'MINIFIG',
-            category_id: 746,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          unit_price: '10.4900',
-          bind_id: 0,
-          description:
-            '* comes with accessories, no plate. Blind bag opened to verify correct minifig',
-          remarks: '',
-          bulk: 1,
-          is_retain: true,
-          is_stock_room: false,
-          date_created: '2020-04-29T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 201833856,
-          item: {
-            no: 'col325',
-            name: 'Flowerpot Girl, Series 18 &#40;Minifigure Only without Stand and Accessories&#41;',
-            type: 'MINIFIG',
-            category_id: 746,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          unit_price: '8.4900',
-          bind_id: 0,
-          description:
-            '* comes with accessories, no plate. Blind bag opened to verify correct minifig',
-          remarks: '',
-          bulk: 1,
-          is_retain: true,
-          is_stock_room: false,
-          date_created: '2020-04-29T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 261615305,
-          item: {
-            no: '40410-1',
-            name: 'Charles Dickens Tribute',
-            type: 'SET',
-            category_id: 390,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '49.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-08-31T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 261615214,
-          item: {
-            no: '40448-1',
-            name: 'Vintage Car',
-            type: 'SET',
-            category_id: 817,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '49.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-08-31T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 316470992,
-          item: {
-            no: '40486-1',
-            name: 'Mini Adidas Originals Superstar',
-            type: 'SET',
-            category_id: 983,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 2,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '32.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2022-10-09T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 343299098,
-          item: {
-            no: 'sh0802',
-            name: 'Doctor Strange - Brooch, Flexible Rubber Cape',
-            type: 'MINIFIG',
-            category_id: 768,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 3,
-          new_or_used: 'N',
-          unit_price: '11.9900',
-          bind_id: 0,
-          description:
-            'New, unused minifig taken directly from the set it came from and placed in a plastic zipper bag.',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2023-04-03T04:00:00.000Z',
-          my_cost: '5.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 316470905,
-          item: {
-            no: '40529-1',
-            name: 'Children&#39;s Amusement Park',
-            type: 'SET',
-            category_id: 983,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '19.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2022-10-09T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 367235081,
-          item: {
-            no: '30435-1',
-            name: 'Build Your Own Hogwarts Castle polybag',
-            type: 'SET',
-            category_id: 227,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 3,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '19.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2023-09-05T04:00:00.000Z',
-          my_cost: '5.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 322439014,
-          item: {
-            no: 'col23-9',
-            name: 'Turkey Costume, Series 23 &#40;Complete Set with Stand and Accessories&#41;',
-            type: 'SET',
-            category_id: 746,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'C',
-          unit_price: '15.0000',
-          bind_id: 0,
-          description:
-            'Comes with accessories and plate. Brand new, never assembled. Packaging opened to verify the correct minifigure.',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2022-11-19T05:00:00.000Z',
-          my_cost: '5.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 322439007,
-          item: {
-            no: 'col23-10',
-            name: 'Ferry Captain, Series 23 &#40;Complete Set with Stand and Accessories&#41;',
-            type: 'SET',
-            category_id: 746,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'C',
-          unit_price: '13.0000',
-          bind_id: 0,
-          description:
-            'Comes with accessories and plate. Brand new, never assembled. Packaging opened to verify the correct minifigure.',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2022-11-19T05:00:00.000Z',
-          my_cost: '5.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 322439000,
-          item: {
-            no: 'col23-11',
-            name: 'Knight of the Yellow Castle, Series 23 &#40;Complete Set with Stand and Accessories&#41;',
-            type: 'SET',
-            category_id: 746,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'C',
-          unit_price: '15.0000',
-          bind_id: 0,
-          description:
-            'Comes with accessories and plate. Brand new, never assembled. Packaging opened to verify the correct minifigure.',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2022-11-19T05:00:00.000Z',
-          my_cost: '5.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 358085370,
-          item: {
-            no: '48544pb02',
-            name: 'Minifigure, Headgear Head Cover, Costume Crayon with Molded Dark Blue Tip and Gold and Metallic Light Blue Stars Pattern &#40;BAM&#41;',
-            type: 'PART',
-            category_id: 16,
-          },
-          color_id: 71,
-          color_name: 'Magenta',
-          quantity: 1,
-          new_or_used: 'N',
-          unit_price: '4.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2023-07-09T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 232279343,
-          item: {
-            no: '30382-1',
-            name: 'Baby Velociraptor Playpen polybag',
-            type: 'SET',
-            category_id: 850,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 2,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '9.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-01-18T05:00:00.000Z',
-          my_cost: '5.5300',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 261614419,
-          item: {
-            no: '853592',
-            name: 'Black Widow &#40;Civil War version&#41; Key Chain',
-            type: 'GEAR',
-            category_id: 334,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          unit_price: '7.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-08-31T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 261615228,
-          item: {
-            no: '40449-1',
-            name: 'Easter Bunny’s Carrot House',
-            type: 'SET',
-            category_id: 390,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '24.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2021-08-31T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 358087066,
-          item: {
-            no: 'trex04',
-            name: 'Dinosaur Tyrannosaurus rex with Dark Orange Back and Dark Brown Markings',
-            type: 'PART',
-            category_id: 184,
-          },
-          color_id: 150,
-          color_name: 'Medium Nougat',
-          quantity: 1,
-          new_or_used: 'N',
-          unit_price: '49.9900',
-          bind_id: 0,
-          description: 'Taken from set and stored in a bag immediately.',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2023-07-09T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
-        {
-          inventory_id: 316470932,
-          item: {
-            no: '40450-1',
-            name: 'Amelia Earhart Tribute',
-            type: 'SET',
-            category_id: 983,
-          },
-          color_id: 0,
-          color_name: '(Not Applicable)',
-          quantity: 1,
-          new_or_used: 'N',
-          completeness: 'S',
-          unit_price: '45.9900',
-          bind_id: 0,
-          description: '',
-          remarks: '',
-          bulk: 1,
-          is_retain: false,
-          is_stock_room: false,
-          date_created: '2022-10-09T04:00:00.000Z',
-          my_cost: '0.0000',
-          sale_rate: 0,
-          tier_quantity1: 0,
-          tier_price1: '0.0000',
-          tier_quantity2: 0,
-          tier_price2: '0.0000',
-          tier_quantity3: 0,
-          tier_price3: '0.0000',
-          my_weight: '0.0000',
-        },
       ],
     }
 
     setInventory(inventory.data ? inventory.data : [])
   }
+
+  useEffect(() => {
+    getStoreInventories()
+  }, [])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -2599,7 +1453,8 @@ export default function StoreInventory() {
           <Table
             sx={{ maxWidth: '100%' }}
             aria-labelledby="tableTitle"
-            size={'small'}>
+            size={'small'}
+            align="center">
             <StoreInventoryHead
               numSelected={selected.length}
               order={order}
@@ -2612,13 +1467,13 @@ export default function StoreInventory() {
               {inventory.length
                 ? inventory
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    // .sort(getComparator(order, orderBy))
+                    .sort(getComparator(order, orderBy))
                     .map((row, index) => {
                       const isItemSelected = isSelected(row.inventory_id)
                       const labelId = `enhanced-table-checkbox-${index}`
 
                       return (
-                        <TableRow
+                        <StyledTableRow
                           hover
                           onClick={(event) =>
                             handleClick(event, row.inventory_id)
@@ -2628,7 +1483,7 @@ export default function StoreInventory() {
                           tabIndex={-1}
                           key={row.inventory_id}
                           selected={isItemSelected}>
-                          <TableCell padding="checkbox">
+                          <StyledTableCell padding="checkbox">
                             <Checkbox
                               color="primary"
                               checked={isItemSelected}
@@ -2636,45 +1491,66 @@ export default function StoreInventory() {
                                 'aria-labelledby': labelId,
                               }}
                             />
-                          </TableCell>
-                          <TableCell
+                          </StyledTableCell>
+                          <StyledTableCell
                             component="th"
                             scope="row"
                             padding="none"
-                            align="center">
+                            align="right">
                             {row.inventory_id}
-                          </TableCell>
-                          <TableCell align="right">{row.item.no}</TableCell>
+                          </StyledTableCell>
+                          <StyledTableCell align="right">
+                            {row.item.no}
+                          </StyledTableCell>
                           <Tooltip
                             disableFocusListener
                             title={row.item.name}
                             arrow>
-                            <TableCell align="left">
+                            <StyledTableCell
+                              align="left"
+                              style={{ width: '1px', whiteSpace: 'nowrap' }}>
                               {row.item.name.length <= 30
                                 ? row.item.name
                                 : `${row.item.name.substring(0, 30)}...`}
-                            </TableCell>
+                            </StyledTableCell>
                           </Tooltip>
-                          <TableCell align="right">{row.item.type}</TableCell>
-                          <TableCell align="right">{row.description}</TableCell>
-                          <TableCell align="right">{row.my_cost}</TableCell>
-                          <TableCell align="right">{row.my_weight}</TableCell>
-                          <TableCell align="right">{row.new_or_used}</TableCell>
-                          <TableCell align="right">{row.quantity}</TableCell>
-                          <TableCell align="right">{row.unit_price}</TableCell>
-                          <TableCell align="right">{row.remarks}</TableCell>
-                          <TableCell align="left">{row.color_name}</TableCell>
-                          <TableCell align="right">{row.is_retain}</TableCell>
-                          <TableCell align="right">
-                            {row.is_stock_room}
-                          </TableCell>
-                          <TableCell align="right">{row.sale_rate}</TableCell>
-                          <TableCell align="right">
-                            {Moment(row.date_created).format('YYYY-MMM-DD')}
-                          </TableCell>
-                          <TableCell align="right">{row.bulk}</TableCell>
-                          <TableCell align="right">{row.bind_id}</TableCell>
-                        </TableRow>
+                          <StyledTableCell align="center">
+                            {row.item.type}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.quantity}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.unit_price}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.my_cost}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.my_weight}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.new_or_used}
+                          </StyledTableCell>
+                          <Tooltip
+                            disableFocusListener
+                            title={row.item.name}
+                            arrow>
+                            <StyledTableCell
+                              align="left"
+                              style={{ width: '1px', whiteSpace: 'nowrap' }}>
+                              {row.description.length <= 40
+                                ? row.description
+                                : `${row.description.substring(0, 40)}...`}
+                            </StyledTableCell>
+                          </Tooltip>
+                          <StyledTableCell align="left">
+                            {row.color_name}
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
+                            {row.is_stock_room ? row.is_stock_room : 'N'}
+                          </StyledTableCell>
+                        </StyledTableRow>
                       )
                     })
                 : []}
@@ -2683,14 +1559,14 @@ export default function StoreInventory() {
                   style={{
                     height: 33 * emptyRows,
                   }}>
-                  <TableCell colSpan={6} />
+                  <StyledTableCell colSpan={6} />
                 </TableRow>
               )}
             </TableBody>
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[10, 25, 100]}
+          rowsPerPageOptions={[25, 50, 100]}
           component="div"
           count={inventory.length}
           rowsPerPage={rowsPerPage}
@@ -2702,3 +1578,33 @@ export default function StoreInventory() {
     </Box>
   )
 }
+
+const StyledTableCell = styled(TableCell)(() => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.primary.contrastText,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}))
+
+const StyledTableRow = styled(TableRow)(() => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.primary.light,
+  },
+  '&:nth-of-type(even)': {
+    backgroundColor: theme.palette.secondary.light,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+  '&:hover': {
+    backgroundColor: 'blue !important',
+  },
+}))
+
+const StyledTableSortLabel = styled(TableSortLabel)(() => ({
+  color: theme.palette.primary.contrastText,
+}))
