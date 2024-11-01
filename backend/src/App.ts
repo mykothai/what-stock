@@ -1,6 +1,6 @@
 
 import express from 'express'
-import OAuthMiddleware from './auth/OAuthMiddleware'
+import router from './routes/index'
 
 require('dotenv').config()
 
@@ -29,7 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }))
 
 // Routers
-app.use('/api/store', storeRouter)
+app.use('/', router())
 
 app.listen(port, () => {
   // tslint:disable-next-line:no-console
