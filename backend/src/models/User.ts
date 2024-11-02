@@ -28,10 +28,10 @@ const UserSchema = new Mongoose.Schema({
 export const UserModel = Mongoose.model('User', UserSchema)
 
 export const getUsers = () => UserModel.find()
-export const getUserById = (id: string) => UserModel.findById(id)
+export const getUserByUserId = (id: string) => UserModel.findById(id)
 export const getUserByEmail = (email: string) => UserModel.findOne({ email })
 export const createUser = (values: Record<string, any>) => new UserModel(values).save().then((user) => user.toObject())
-export const deleteUser = (id: string) => UserModel.findOneAndDelete({ _id: id })
+export const deleteUserById = (id: string) => UserModel.findOneAndDelete({ _id: id })
 export const updateUserById = (id: string, values: Record<string, any>) =>
   UserModel.findOneAndUpdate({ _id: id }, values)
 
