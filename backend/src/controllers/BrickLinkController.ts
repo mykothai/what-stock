@@ -2,7 +2,7 @@ import OAuth from 'oauth'
 import { Request, Response } from 'express'
 import { env } from 'process'
 import { updateItemById } from '../models/Item'
-import { STORES } from 'src/constants'
+import { STORES } from '../constants'
 
 require('dotenv').config()
 

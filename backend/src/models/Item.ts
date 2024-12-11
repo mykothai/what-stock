@@ -133,5 +133,4 @@ export const getItemById = (id: string) => ItemModel.findById({ id })
 export const createItem = (values: Record<string, any>) => new ItemModel(values).save().then((item) => item.toObject())
 export const deleteItem = (id: string) => ItemModel.findOneAndDelete({ _id: id })
 export const updateItemById = (itemNo: string, values: Record<string, any>) =>
-{console.log('update values', values)
-  ItemModel.findOneAndUpdate({ item: { no: itemNo } }, values, { upsert: true })}
+  ItemModel.findOneAndUpdate({ item: { no: itemNo } }, values, { upsert: true })
