@@ -23,19 +23,48 @@ import { StoreInventoryData, InventoryHeaders } from '../constants'
 import { useAppSelector } from '../app/hooks'
 import { theme } from '../theme'
 
-function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1
+function descendingComparator<Key extends keyof any>(
+  a: any,
+  b: any,
+  orderBy: Key,
+): number {
+  // Default undefined to null
+  const aValue = a[orderBy] ?? null
+  const bValue = b[orderBy] ?? null
+
+  if (aValue === null && bValue === null) {
+    return 0 // Both values are null, considered equal
   }
-  if (b[orderBy] > a[orderBy]) {
-    return 1
+  if (aValue === null) {
+    return 1 // Undefined/null values go last
   }
-  return 0
+  if (bValue === null) {
+    return -1 // Undefined/null values go last
+  }
+
+  // Check if values are number strings
+  const isANumber = !isNaN(parseFloat(aValue)) && isFinite(aValue)
+  const isBNumber = !isNaN(parseFloat(bValue)) && isFinite(bValue)
+
+  // Handles floats like 24.500 and 6.50
+  if (isANumber && isBNumber) {
+    return parseFloat(bValue) - parseFloat(aValue) // Compare as numbers
+  }
+
+  if (typeof aValue === 'number' && typeof bValue === 'number') {
+    return bValue - aValue // Compare numbers directly
+  }
+
+  if (typeof aValue === 'string' && typeof bValue === 'string') {
+    return bValue.localeCompare(aValue) // Compare strings
+  }
+
+  // Fallback to string comparison for other cases
+  return bValue.toString().localeCompare(aValue.toString())
 }
 
 type Order = 'asc' | 'desc'
 
-// FIXME: sorting is not working for string values
 function getComparator<Key extends keyof any>(
   order: Order,
   orderBy: Key,
@@ -240,7 +269,7 @@ export default function StoreInventory() {
       const inventory = await getInventory().then((res) => res.data)
       setInventory(inventory)
     } catch (error) {
-      console.log('Failed to retrieve inventory.', error)
+      console.error('Failed to retrieve inventory.', error)
     }
   }
 
