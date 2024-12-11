@@ -118,11 +118,20 @@ const ItemSchema = new Mongoose.Schema({
   },
 })
 
-export const ItemModel = Mongoose.model('Item', ItemSchema)
+const CustomItemPropertiesSchema = new Mongoose.Schema({
+  listed_on: {
+    type: String,
+    required: true,
+  },
+})
+
+
+export const ItemModel = Mongoose.model('Item', ItemSchema && CustomItemPropertiesSchema)
 
 export const getItems = () => ItemModel.find()
 export const getItemById = (id: string) => ItemModel.findById({ id })
 export const createItem = (values: Record<string, any>) => new ItemModel(values).save().then((item) => item.toObject())
 export const deleteItem = (id: string) => ItemModel.findOneAndDelete({ _id: id })
 export const updateItemById = (itemNo: string, values: Record<string, any>) =>
-  ItemModel.findOneAndUpdate({ item: { no: itemNo } }, values, { upsert: true })
+{console.log('update values', values)
+  ItemModel.findOneAndUpdate({ item: { no: itemNo } }, values, { upsert: true })}

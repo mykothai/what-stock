@@ -2,6 +2,7 @@ import OAuth from 'oauth'
 import { Request, Response } from 'express'
 import { env } from 'process'
 import { updateItemById } from '../models/Item'
+import { STORES } from 'src/constants'
 
 require('dotenv').config()
 
@@ -32,7 +33,8 @@ export const getInventory = async (_req: Request, res: Response) => {
         // Update or upsert the item
         return await Promise.all(
           parsedResult.data.map((item: Record<string, any>) => {
-            return new Promise(() => updateItemById(item.item.no, item))
+            return new Promise(() => updateItemById(item.item.no, {...item,
+            listed_on: STORES.BrickLink}))
           })
         )
       }
