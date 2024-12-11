@@ -7,6 +7,10 @@ export interface StoreInventoryData {
     type: string
     category_id: number
   }
+  no: string
+  name: string
+  type: string
+  category_id: number
   color_id: number
   color_name: string
   quantity: number
@@ -47,19 +51,14 @@ export const InventoryHeaders: readonly InventoryHeader[] = [
     label: 'Inventory ID',
   },
   {
-    id: 'item',
+    id: 'no',
     numeric: true,
     disablePadding: false,
     label: 'Item No.',
   },
+  { id: 'name', numeric: false, disablePadding: false, label: 'Item Name' },
   {
-    id: 'item',
-    numeric: false,
-    disablePadding: false,
-    label: 'Item Name',
-  },
-  {
-    id: 'item',
+    id: 'type',
     numeric: false,
     disablePadding: false,
     label: 'Item Type',

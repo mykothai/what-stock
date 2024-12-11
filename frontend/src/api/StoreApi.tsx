@@ -1,12 +1,8 @@
 import axios, { AxiosResponse } from 'axios'
 
-export async function getInventories(): Promise<AxiosResponse> {
-  const URL = `/api/store/inventories`
-  
+export async function getInventory(): Promise<AxiosResponse> {
   try {
-    const response = await axios.get(URL)
-    return response.data
-    
+    return await axios.get('/inventory')
   } catch (err: any) {
     throw err.response
   }
