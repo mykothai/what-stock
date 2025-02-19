@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import Box from '@mui/material/Box'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
-import TableCell, { tableCellClasses } from '@mui/material/TableCell'
+import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
@@ -16,7 +16,6 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
 import FilterListIcon from '@mui/icons-material/FilterList'
-import { theme } from '../../theme'
 import { StoreInventoryData, InventoryHeaders } from '../../constants'
 import { getInventory } from '@api/StoreApi'
 import he from 'he'
@@ -51,7 +50,7 @@ function StoreInventoryHead(props: StoreInventoryProps) {
 
   return (
     <TableHead>
-      <TableRow className="bg-blue-500 text-white">
+      <TableRow className="bg-primary-main text-white">
         <TableCell className="px-4 py-2">
           <Checkbox
             color="primary"
@@ -63,7 +62,7 @@ function StoreInventoryHead(props: StoreInventoryProps) {
         {InventoryHeaders.map((inventoryHeader) => (
           <TableCell
             key={inventoryHeader.id}
-            className="px-4 py-2 text-center font-semibold">
+            className="px-4 py-2 text-center font-bold text-primary-contrast bg-primary-main">
             <TableSortLabel
               active={orderBy === inventoryHeader.id}
               direction={orderBy === inventoryHeader.id ? order : 'asc'}
@@ -121,13 +120,36 @@ export default function StoreInventory() {
   const [inventory, setInventory] = useState<StoreInventoryData[]>([])
 
   const handleSortRequest = useCallback(
-    (event: React.MouseEvent<unknown>, property: keyof StoreInventoryData) => {
+    (_event: React.MouseEvent<unknown>, property: keyof StoreInventoryData) => {
       const isAsc = orderBy === property && order === 'asc'
+
       setOrder(isAsc ? 'desc' : 'asc')
       setOrderBy(property)
     },
     [order, orderBy],
   )
+
+  const handleChangePage = (_event: unknown, newPage: number) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
+
+  const sortedInventory = useMemo(() => {
+    if (!orderBy) return inventory
+
+    return [...inventory].sort(getComparator(order, orderBy))
+  }, [inventory, order, orderBy])
+
+  const paginatedData = useMemo(() => {
+    const start = page * rowsPerPage
+    return sortedInventory.slice(start, start + rowsPerPage)
+  }, [sortedInventory, page, rowsPerPage])
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
@@ -158,28 +180,11 @@ export default function StoreInventory() {
     })
   }
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
   const isSelected = (itemNumber: number) => selected.indexOf(itemNumber) !== -1
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - inventory.length) : 0
-
-  const sortedInventory = useMemo(() => {
-    return inventory
-      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-      .sort(getComparator(order, orderBy))
-  }, [inventory, order, orderBy])
 
   const getStoreInventories = async () => {
     try {
@@ -209,21 +214,22 @@ export default function StoreInventory() {
               rowCount={inventory.length}
             />
             <TableBody>
-              {inventory.length
-                ? sortedInventory.map((row, index) => {
+              {paginatedData.length
+                ? paginatedData.map((row, index) => {
                     const isItemSelected = isSelected(row.inventory_id)
                     return (
                       <TableRow
                         key={row.inventory_id}
-                        onClick={(event) =>
-                          handleClick(event, row.inventory_id)
-                        }
                         role="checkbox"
                         selected={isItemSelected}
                         className={`cursor-pointer ${
                           isItemSelected ? 'bg-purple-300' : 'hover:bg-gray-100'
                         }`}>
-                        <TableCell className="px-4 py-2">
+                        <TableCell
+                          className="px-4 py-2"
+                          onClick={(event) =>
+                            handleClick(event, row.inventory_id)
+                          }>
                           <Checkbox color="primary" checked={isItemSelected} />
                         </TableCell>
                         <TableCell className="px-4 py-2 text-right">

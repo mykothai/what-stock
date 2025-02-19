@@ -11,6 +11,9 @@ export default defineConfig({
       usePolling: true,
     },
   },
+  css: {
+    postcss: './postcss.config.ts',
+  },
   resolve: {
     alias: [
       {

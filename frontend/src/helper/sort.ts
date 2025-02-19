@@ -3,9 +3,9 @@ export function descendingComparator<Key extends keyof any>(
   b: any,
   orderBy: Key,
 ): number {
-  // Default undefined to null
-  const aValue = a[orderBy] ?? null
-  const bValue = b[orderBy] ?? null
+  // handles objects with a nested item object
+  const aValue = a.item[orderBy] ? a.item[orderBy] : a[orderBy] ?? null
+  const bValue = b.item[orderBy] ? b.item[orderBy] : b[orderBy] ?? null
 
   if (aValue === null && bValue === null) {
     return 0 // Both values are null, considered equal
