@@ -1,33 +1,34 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
+    "target": "ESNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
     "skipLibCheck": true,
+    "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+
+    "baseUrl": "./src",
+    "paths": {
+      "@components/*": ["components/*"],
+      "@api/*": ["api/*"],
+      "@constants": ["constants.ts"],
+      "@hooks/*": ["hooks/*"],
+      "@store/*": ["store/*"],
+      "@helper/*": ["helper/*"]
+    }
   },
-  "include": [
-    "src/**/*.tsx",
-    "src/**/*.ts"
-  ],
+ "include": ["vite.config.ts", "src/**/*.tsx", "src/**/*.ts"],
   "eslintConfig": {
-    "plugins": [
-      "react-hooks"
-    ],
+    "plugins": ["react-hooks"],
     "rules": {
       "react-hooks/rules-of-hooks": "error",
       "react-hooks/exhaustive-deps": "warn"

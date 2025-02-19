@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react'
 import './App.css'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import LandingDashboard from './dashboards/LandingDashboard'
+import LandingDashboard from './components/Dashboards/LandingDashboard'
 import { ItemPage } from './components/Inventory/ItemPage'
 import Header from './components/Header/Header'
 import SidebarMenuItems from './components/Sidebar/SidebarMenuItems'
