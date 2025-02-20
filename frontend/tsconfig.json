@@ -23,10 +23,11 @@
       "@constants": ["constants.ts"],
       "@hooks/*": ["hooks/*"],
       "@store/*": ["store/*"],
-      "@helper/*": ["helper/*"]
+      "@helper/*": ["helper/*"],
+      "@assets/*": ["assets/*"]
     }
   },
- "include": ["vite.config.ts", "src/**/*.tsx", "src/**/*.ts"],
+  "include": ["vite.config.ts", "src/**/*.tsx", "src/**/*.ts"],
   "eslintConfig": {
     "plugins": ["react-hooks"],
     "rules": {

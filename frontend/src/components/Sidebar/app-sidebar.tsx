@@ -1,6 +1,4 @@
 import * as React from 'react'
-
-import { SearchForm } from '@components/Sidebar/search-form'
 import {
   Sidebar,
   SidebarContent,
@@ -17,19 +15,21 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
 } from '@components/ui/sidebar'
-import { ChevronUp, House, Settings, Toilet } from 'lucide-react'
+import { ChevronUp, House, Settings, Tally5, Toilet } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu'
-import { useIsMobile } from '@components/hooks/use-mobile'
+import eBayLogo from '@assets/images/eBayLogo-4Color-RGB.png'
+import blLogo from '@assets/images/BrickLink_glyph.png'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 interface BaseSidebarItem {
   title: string
-  url: string
-  icon: React.ReactNode
+  url?: string
+  icon?: React.ReactNode
 }
 
 interface ParentSidebarItem extends BaseSidebarItem {
@@ -50,13 +50,12 @@ const data: SidebarNavMenu = {
     {
       title: 'What The Stock?',
       url: '#',
-      icon: <Toilet />,
       items: [
         {
           title: 'Everything',
           url: '#',
           isActive: false,
-          icon: <Toilet />,
+          icon: <Tally5 />,
         },
         {
           title: 'Categories',
@@ -100,24 +99,19 @@ const data: SidebarNavMenu = {
     },
     {
       title: 'BrickLink',
-      url: '#',
-      icon: <Toilet />,
+      icon: (
+        <img className="w-6 h-6" src={blLogo} alt="bl logo" loading="lazy" />
+      ),
       items: [
         {
           title: 'Inventory',
-          url: '#',
-          isActive: false,
-          icon: <Toilet />,
-        },
-        {
-          title: 'Listed',
-          url: '#',
+          url: 'bl-inventory',
           isActive: false,
           icon: <Toilet />,
         },
         {
           title: 'Sales',
-          url: '#',
+          url: 'bl-sales',
           isActive: false,
           icon: <Toilet />,
         },
@@ -125,24 +119,24 @@ const data: SidebarNavMenu = {
     },
     {
       title: 'eBay',
-      url: '#',
-      icon: <Toilet />,
+      icon: (
+        <img
+          className="w-6 h-6 scale-250"
+          src={eBayLogo}
+          alt="eBay logo"
+          loading="lazy"
+        />
+      ),
       items: [
         {
           title: 'Inventory',
-          url: '#',
-          isActive: false,
-          icon: <Toilet />,
-        },
-        {
-          title: 'Listed',
-          url: '#',
+          url: 'eb-inventory',
           isActive: false,
           icon: <Toilet />,
         },
         {
           title: 'Sales',
-          url: '#',
+          url: 'eb-sales',
           isActive: false,
           icon: <Toilet />,
         },
@@ -152,6 +146,9 @@ const data: SidebarNavMenu = {
 }
 
 const renderSidebarItems = (items: ChildSidebarItem[]) => {
+  const location = useLocation()
+  const navigate = useNavigate()
+
   return items.map((item: ChildSidebarItem) => (
     <SidebarMenuItem key={item.title}>
       <SidebarMenuButton asChild isActive={item.isActive}>
@@ -166,11 +163,19 @@ const renderSidebarItems = (items: ChildSidebarItem[]) => {
           <SidebarMenuItem>
             <SidebarMenuSub>
               <SidebarMenuSubItem>
-                <SidebarMenuSubButton asChild isActive={subItem.isActive}>
-                  <a href={subItem.url} className="flex items-center gap-2">
+                <SidebarMenuSubButton
+                  asChild
+                  isActive={subItem.isActive}
+                  onClick={() => navigate(subItem.url!)}
+                  className={`flex items-center gap-2 ${
+                    location.pathname === subItem.url
+                      ? 'bg-primary text-white'
+                      : 'hover:bg-gray-00'
+                  }`}>
+                  <div>
                     {subItem.icon}
                     <span>{subItem.title}</span>
-                  </a>
+                  </div>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>
             </SidebarMenuSub>
@@ -185,13 +190,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     <Sidebar {...props}>
       <SidebarHeader>
         <SidebarMenuButton>
-          <House /> What Stock
+          <House /> What the Stock?
         </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
         {data.navMain.map((group: ParentSidebarItem) => (
           <SidebarGroup key={group.title}>
-            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
+            {group.icon && (
+              <SidebarGroupLabel className="flex items-center gap-2">
+                {group.icon}
+              </SidebarGroupLabel>
+            )}
             <SidebarGroupContent>
               <SidebarMenu>{renderSidebarItems(group.items)}</SidebarMenu>
             </SidebarGroupContent>

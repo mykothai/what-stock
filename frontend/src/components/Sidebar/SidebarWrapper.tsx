@@ -1,6 +1,12 @@
-import { cn } from '@components/lib/utils'
+import BreadcrumbWrapper from '@components/Breadcrumb/BreadcrumbWrapper'
 import { AppSidebar } from '@components/Sidebar/app-sidebar'
-import { SidebarProvider, SidebarTrigger } from '@components/ui/sidebar'
+
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from '@components/ui/sidebar'
+import { Separator } from '@radix-ui/react-separator'
 import { useState } from 'react'
 
 export default function SidebarWrapper() {
@@ -8,14 +14,19 @@ export default function SidebarWrapper() {
 
   return (
     <SidebarProvider open={open} onOpenChange={setOpen}>
-      <div className="relative">
-        <AppSidebar variant="floating" collapsible="icon" />
-        <SidebarTrigger
-          className={`absolute top-4 ${
-            open ? 'right-[-14rem]' : 'right-[-2rem]'
-          }`}
-        />
-      </div>
+      <AppSidebar collapsible="icon" />
+      <SidebarInset
+        className={`flex gap-2 px-3 ${
+          open ? 'right-[-11rem]' : 'right-[-3.5rem]'
+        }`}>
+        <header className="flex h-16 items-center gap-2 border-b">
+          <div className="flex gap-2 justify-start w-full">
+            <SidebarTrigger />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <BreadcrumbWrapper />
+          </div>
+        </header>
+      </SidebarInset>
     </SidebarProvider>
   )
 }
