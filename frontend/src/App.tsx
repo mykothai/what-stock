@@ -22,7 +22,7 @@ function App() {
           <SidebarProvider open={open} onOpenChange={setOpen}>
             <AppSidebar collapsible="icon" />
             <SidebarInset
-              className={`flex gap-2 px-2 bg-green-100  ${
+              className={`flex gap-2 px-2 ${
                 open ? 'right-[-11rem]' : 'right-[-3.5rem]'
               }`}>
               <header className="flex h-16 items-center gap-2 border-b">
