@@ -2,7 +2,11 @@ import { Order } from '@helper/sort'
 import { useEffect, useState } from 'react'
 import { getInventory } from '@api/StoreApi'
 import { DataTable } from '@components/ui/table/data-table'
-import { MainInventoryColumns, StoreInventory } from '@components/ui/table/columns'
+import {
+  MainInventoryColumns,
+  StoreInventory,
+} from '@components/ui/table/columns'
+import { ColumnFiltersState } from '@tanstack/react-table'
 
 interface StoreInventoryProps {
   numSelected: number
