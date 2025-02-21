@@ -25,6 +25,7 @@ import {
 import eBayLogo from '@assets/images/eBayLogo-4Color-RGB.png'
 import blLogo from '@assets/images/BrickLink_glyph.png'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { ModeToggle } from '@components/mode-toggle'
 
 interface BaseSidebarItem {
   title: string
@@ -186,10 +187,12 @@ const renderSidebarItems = (items: ChildSidebarItem[]) => {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const navigate = useNavigate()
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <SidebarMenuButton>
+        <SidebarMenuButton onClick={() => navigate('/')}>
           <House /> What the Stock?
         </SidebarMenuButton>
       </SidebarHeader>
@@ -208,6 +211,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarFooter>
+        <ModeToggle />
         <SidebarMenu>
           <SidebarMenuItem>
             <DropdownMenu>
@@ -226,6 +230,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <DropdownMenuItem>
                   <span>Sign out</span>
                 </DropdownMenuItem>
+                <DropdownMenuItem></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </SidebarMenuItem>
