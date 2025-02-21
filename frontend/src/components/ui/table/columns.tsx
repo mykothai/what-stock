@@ -2,6 +2,20 @@ import { ColumnDef } from '@tanstack/react-table'
 import { DataTableColumnHeader } from './column-header'
 import { formatCurrency } from '@helper/conversion'
 import { CONDITION } from '@constants'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../dropdown-menu'
+import {
+  EllipsisVertical,
+  MoreHorizontal,
+  SquareChevronDown,
+} from 'lucide-react'
+import { Button } from '../button'
 
 export type StoreInventory = {
   inventory_id: number
@@ -38,6 +52,39 @@ export type StoreInventory = {
 
 export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
   {
+    id: 'actions',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Action" />
+    ),
+    cell: ({ row }) => {
+      const item = row.original
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() =>
+                navigator.clipboard.writeText(item.item.name.toString())
+              }>
+              Copy Item Name
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Sell</DropdownMenuItem>
+            <DropdownMenuItem>Edit</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem>Details</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    },
+  },
+  {
     accessorKey: 'inventory_id',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Inventory Id" />
@@ -49,12 +96,21 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
   },
   {
     accessorKey: 'item.no',
-    header: 'Item No.',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Item No." />
+    ),
   },
-  { accessorKey: 'item.name', header: 'Item Name' },
+  {
+    accessorKey: 'item.name',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Item Name" />
+    ),
+  },
   {
     accessorKey: 'item.type',
-    header: 'Item Type',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category" />
+    ),
     cell: ({ row }) => {
       const type = row.original.item.type
       return <div className="text-center font-medium">{type}</div>
@@ -62,7 +118,9 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
   },
   {
     accessorKey: 'quantity',
-    header: 'Quantity',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Qty" />
+    ),
     cell: ({ row }) => {
       const quantity = parseFloat(row.getValue('quantity'))
       return <div className="text-center font-medium">{quantity}</div>
@@ -70,7 +128,9 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
   },
   {
     accessorKey: 'unit_price',
-    header: 'Unit Price',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Price" />
+    ),
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('unit_price'))
       return (
@@ -80,7 +140,9 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
   },
   {
     accessorKey: 'my_cost',
-    header: 'My Cost',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="My Cost" />
+    ),
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('my_cost'))
       return (
@@ -90,11 +152,15 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
   },
   {
     accessorKey: 'my_weight',
-    header: 'Weight',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Weight (kg)" />
+    ),
   },
   {
     accessorKey: 'new_or_used',
-    header: 'Condition',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Condition" />
+    ),
     cell: ({ row }) => {
       const condition = row.getValue('new_or_used') as keyof typeof CONDITION
       return (
@@ -104,11 +170,15 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
   },
   {
     accessorKey: 'description',
-    header: 'Description',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Description" />
+    ),
   },
   {
     accessorKey: 'color_name',
-    header: 'Color',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Color" />
+    ),
     cell: ({ row }) => {
       const colorName: string = row.getValue('color_name')
       return <div className="text-center font-medium">{colorName}</div>
@@ -116,7 +186,9 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
   },
   {
     accessorKey: 'is_stock_room',
-    header: 'Hidden',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Hidden" />
+    ),
     cell: ({ row }) => {
       const isStockRoom: boolean = row.getValue('is_stock_room')
       return (

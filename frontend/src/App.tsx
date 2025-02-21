@@ -22,8 +22,8 @@ function App() {
           <SidebarProvider open={open} onOpenChange={setOpen}>
             <AppSidebar collapsible="icon" />
             <SidebarInset
-              className={`flex gap-2 px-2 ${
-                open ? 'right-[-11rem]' : 'right-[-3.5rem]'
+              className={`flex gap-2 px-2 w-auto max-w-[calc(100vw-5.5rem)] transition-all duration-300 right-0 ${
+                open ? 'translate-x-[11.5rem]' : 'translate-x-[4rem]'
               }`}>
               <header className="flex h-16 items-center gap-2 border-b">
                 <div className="flex gap-2 justify-start w-full">
