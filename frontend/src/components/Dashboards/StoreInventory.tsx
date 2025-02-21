@@ -16,16 +16,16 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteIcon from '@mui/icons-material/Delete'
 import FilterListIcon from '@mui/icons-material/FilterList'
-import { StoreInventoryData, InventoryHeaders } from '../../constants'
 import { getInventory } from '@api/StoreApi'
 import he from 'he'
 import { Order, getComparator } from '@helper/sort'
+import { InventoryHeaders, StoreInventoryFields } from '@constants'
 
 interface StoreInventoryProps {
   numSelected: number
   onRequestSort: (
     event: React.MouseEvent<unknown>,
-    property: keyof StoreInventoryData,
+    property: keyof StoreInventoryFields,
   ) => void
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void
   order: Order
@@ -43,7 +43,7 @@ function StoreInventoryHead(props: StoreInventoryProps) {
     onRequestSort,
   } = props
   const createSortHandler =
-    (property: keyof StoreInventoryData) =>
+    (property: keyof StoreInventoryFields) =>
     (event: React.MouseEvent<unknown>) => {
       onRequestSort(event, property)
     }
@@ -113,14 +113,17 @@ const StoreInventoryToolbar = (props: StoreInventoryToolbarProps) => {
 export default function StoreInventory() {
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] =
-    React.useState<keyof StoreInventoryData>('inventory_id')
+    React.useState<keyof StoreInventoryFields>('inventory_id')
   const [selected, setSelected] = React.useState<readonly number[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(25)
-  const [inventory, setInventory] = useState<StoreInventoryData[]>([])
+  const [inventory, setInventory] = useState<StoreInventoryFields[]>([])
 
   const handleSortRequest = useCallback(
-    (_event: React.MouseEvent<unknown>, property: keyof StoreInventoryData) => {
+    (
+      _event: React.MouseEvent<unknown>,
+      property: keyof StoreInventoryFields,
+    ) => {
       const isAsc = orderBy === property && order === 'asc'
 
       setOrder(isAsc ? 'desc' : 'asc')

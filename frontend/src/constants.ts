@@ -1,5 +1,5 @@
-// Store Inventory
-export interface StoreInventoryData {
+// Store Inventory from DB
+export interface StoreInventoryFields {
   inventory_id: number
   item: {
     no: string
@@ -38,7 +38,7 @@ export interface StoreInventoryData {
 
 interface InventoryHeader {
   disablePadding: boolean
-  id: keyof StoreInventoryData
+  id: keyof StoreInventoryFields
   label: string
   numeric: boolean
 }
@@ -112,3 +112,8 @@ export const InventoryHeaders: readonly InventoryHeader[] = [
     label: 'Hidden',
   },
 ]
+
+export enum CONDITION {
+  N = 'New',
+  U = 'Used',
+}

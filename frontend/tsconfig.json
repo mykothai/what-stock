@@ -20,7 +20,7 @@
     "paths": {
       "@components/*": ["components/*"],
       "@api/*": ["api/*"],
-      "@constants": ["constants.ts"],
+      "@constants": ["./constants.ts"],
       "@hooks/*": ["hooks/*"],
       "@store/*": ["store/*"],
       "@helper/*": ["helper/*"],

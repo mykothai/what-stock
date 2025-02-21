@@ -1,5 +1,6 @@
 import React from 'react'
 import StoreInventory from './StoreInventory'
+import MainTable from './MainTable'
 
 export default function LandingDashboard() {
   return (
@@ -9,8 +10,9 @@ export default function LandingDashboard() {
         <div className="aspect-video rounded-xl bg-muted/50" />
         <div className="aspect-video rounded-xl bg-muted/50" />
       </div>
-      <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
-      <StoreInventory />
+      <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min">
+        <MainTable />
+      </div>
     </div>
   )
 }

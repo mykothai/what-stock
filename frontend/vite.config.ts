@@ -34,7 +34,7 @@ export default defineConfig({
       },
       {
         find: '@hooks',
-        replacement: path.resolve(__dirname, './src/hooks/hooks.ts'),
+        replacement: path.resolve(__dirname, './src/hooks/hooks.tsx'),
       },
       {
         find: '@helper',

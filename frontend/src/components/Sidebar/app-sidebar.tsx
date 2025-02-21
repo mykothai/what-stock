@@ -161,26 +161,24 @@ const renderSidebarItems = (items: ChildSidebarItem[]) => {
       {/* Recursively render nested items */}
       {item.items &&
         item.items.map((subItem) => (
-          <SidebarMenuItem>
-            <SidebarMenuSub>
-              <SidebarMenuSubItem>
-                <SidebarMenuSubButton
-                  asChild
-                  isActive={subItem.isActive}
-                  onClick={() => navigate(subItem.url!)}
-                  className={`flex items-center gap-2 ${
-                    location.pathname === subItem.url
-                      ? 'bg-primary text-white'
-                      : 'hover:bg-gray-00'
-                  }`}>
-                  <div>
-                    {subItem.icon}
-                    <span>{subItem.title}</span>
-                  </div>
-                </SidebarMenuSubButton>
-              </SidebarMenuSubItem>
-            </SidebarMenuSub>
-          </SidebarMenuItem>
+          <SidebarMenuSub>
+            <SidebarMenuSubItem key={subItem.title}>
+              <SidebarMenuSubButton
+                asChild
+                isActive={subItem.isActive}
+                onClick={() => navigate(subItem.url!)}
+                className={`flex items-center gap-2 ${
+                  location.pathname === subItem.url
+                    ? 'bg-primary text-white'
+                    : 'hover:bg-gray-00'
+                }`}>
+                <div>
+                  {subItem.icon}
+                  <span>{subItem.title}</span>
+                </div>
+              </SidebarMenuSubButton>
+            </SidebarMenuSubItem>
+          </SidebarMenuSub>
         ))}
     </SidebarMenuItem>
   ))
