@@ -6,7 +6,6 @@ import {
   MainInventoryColumns,
   StoreInventory,
 } from '@components/ui/table/columns'
-import { ColumnFiltersState } from '@tanstack/react-table'
 
 interface StoreInventoryProps {
   numSelected: number

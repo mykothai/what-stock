@@ -36,84 +36,9 @@ export interface StoreInventoryFields {
   my_weight: string
 }
 
-interface InventoryHeader {
-  disablePadding: boolean
-  id: keyof StoreInventoryFields
-  label: string
-  numeric: boolean
-}
-
-export const InventoryHeaders: readonly InventoryHeader[] = [
-  {
-    id: 'inventory_id',
-    numeric: true,
-    disablePadding: false,
-    label: 'Inventory ID',
-  },
-  {
-    id: 'no',
-    numeric: true,
-    disablePadding: false,
-    label: 'Item No.',
-  },
-  { id: 'name', numeric: false, disablePadding: false, label: 'Item Name' },
-  {
-    id: 'type',
-    numeric: false,
-    disablePadding: false,
-    label: 'Item Type',
-  },
-  {
-    id: 'quantity',
-    numeric: true,
-    disablePadding: false,
-    label: 'Quantity',
-  },
-  {
-    id: 'unit_price',
-    numeric: true,
-    disablePadding: false,
-    label: 'Unit Price',
-  },
-  {
-    id: 'my_cost',
-    numeric: true,
-    disablePadding: false,
-    label: 'My Cost',
-  },
-  {
-    id: 'my_weight',
-    numeric: true,
-    disablePadding: false,
-    label: 'Weight',
-  },
-  {
-    id: 'new_or_used',
-    numeric: false,
-    disablePadding: false,
-    label: 'Condition',
-  },
-  {
-    id: 'description',
-    numeric: false,
-    disablePadding: false,
-    label: 'Description',
-  },
-  {
-    id: 'color_name',
-    numeric: false,
-    disablePadding: false,
-    label: 'Color',
-  },
-  {
-    id: 'is_stock_room',
-    numeric: false,
-    disablePadding: false,
-    label: 'Hidden',
-  },
-]
-
 export enum CONDITION {
   N = 'New',
   U = 'Used',
 }
+
+export const DEFAULT_PAGE_SIZES = [25, 50, 75, 100]

@@ -6,16 +6,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../dropdown-menu'
-import {
-  EllipsisVertical,
-  MoreHorizontal,
-  SquareChevronDown,
-} from 'lucide-react'
-import { Button } from '../button'
+} from '@components/ui/dropdown-menu'
+import { MoreHorizontal } from 'lucide-react'
+import { Button } from '@components/ui/button'
 
 export type StoreInventory = {
   inventory_id: number
