@@ -11,9 +11,11 @@ import {
 } from '@components/ui/sidebar'
 import { Separator } from '@radix-ui/react-separator'
 import { ThemeProvider } from '@components/theme-provider'
+import { useIsMobile } from '@components/hooks/use-mobile'
 
 function App() {
   const [open, setOpen] = useState(true)
+  const isMobile = useIsMobile()
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -22,9 +24,16 @@ function App() {
           <SidebarProvider open={open} onOpenChange={setOpen}>
             <AppSidebar collapsible="icon" />
             <SidebarInset
-              className={`flex gap-2 px-2 w-auto max-w-[calc(100vw-5.5rem)] transition-all duration-300 right-0 ${
-                open ? 'translate-x-[11.5rem]' : 'translate-x-[4rem]'
-              }`}>
+              className={`flex gap-2 px-2 w-auto transition-all duration-300 right-0 ${
+                !isMobile &&
+                (open ? 'translate-x-[12rem]' : 'translate-x-[4rem]')
+              } ${
+                !isMobile &&
+                (open
+                  ? 'max-w-[calc(100vw-14rem)]'
+                  : 'max-w-[calc(100vw-6rem)]')
+              } ${isMobile && 'max-w-[calc(100vw-1.25rem)]'}
+              `}>
               <header className="flex h-16 items-center gap-2 border-b">
                 <div className="flex gap-2 justify-start w-full">
                   <SidebarTrigger />
