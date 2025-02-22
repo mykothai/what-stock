@@ -11,6 +11,14 @@ import {
 } from '@components/ui/dropdown-menu'
 import { MoreHorizontal } from 'lucide-react'
 import { Button } from '@components/ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@components/ui/tooltip'
+import he from 'he'
+import { TooltipWrapper } from '../tooltip-wrapper'
 
 export type StoreInventory = {
   inventory_id: number
@@ -86,7 +94,7 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
     ),
     cell: ({ row }) => {
       const inventoryId = parseFloat(row.getValue('inventory_id'))
-      return <div className="text-left font-medium">{inventoryId}</div>
+      return <div className="text-left font-small">{inventoryId}</div>
     },
   },
   {
@@ -100,6 +108,14 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Item Name" />
     ),
+    cell: ({ row }) => {
+      const itemName = row.original.item.name
+      return (
+        <div className="text-center font-small">
+          <TooltipWrapper text={itemName} charLimit={50} />
+        </div>
+      )
+    },
   },
   {
     accessorKey: 'item.type',
@@ -108,7 +124,7 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
     ),
     cell: ({ row }) => {
       const type = row.original.item.type
-      return <div className="text-center font-medium">{type}</div>
+      return <div className="text-center font-small">{type}</div>
     },
   },
   {
@@ -118,7 +134,7 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
     ),
     cell: ({ row }) => {
       const quantity = parseFloat(row.getValue('quantity'))
-      return <div className="text-center font-medium">{quantity}</div>
+      return <div className="text-center font-small">{quantity}</div>
     },
   },
   {
@@ -129,7 +145,7 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('unit_price'))
       return (
-        <div className="text-right font-medium">{formatCurrency(amount)}</div>
+        <div className="text-right font-small">{formatCurrency(amount)}</div>
       )
     },
   },
@@ -141,7 +157,7 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue('my_cost'))
       return (
-        <div className="text-right font-medium">{formatCurrency(amount)}</div>
+        <div className="text-right font-small">{formatCurrency(amount)}</div>
       )
     },
   },
@@ -159,7 +175,7 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
     cell: ({ row }) => {
       const condition = row.getValue('new_or_used') as keyof typeof CONDITION
       return (
-        <div className="text-center font-medium">{CONDITION[condition]}</div>
+        <div className="text-center font-small">{CONDITION[condition]}</div>
       )
     },
   },
@@ -176,7 +192,7 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
     ),
     cell: ({ row }) => {
       const colorName: string = row.getValue('color_name')
-      return <div className="text-center font-medium">{colorName}</div>
+      return <div className="text-center font-small">{colorName}</div>
     },
   },
   {
@@ -187,7 +203,7 @@ export const MainInventoryColumns: ColumnDef<StoreInventory>[] = [
     cell: ({ row }) => {
       const isStockRoom: boolean = row.getValue('is_stock_room')
       return (
-        <div className="text-center font-medium">
+        <div className="text-center font-small">
           {isStockRoom ? 'True' : 'False'}
         </div>
       )
