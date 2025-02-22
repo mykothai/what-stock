@@ -1,4 +1,3 @@
-import { Order } from '@helper/sort'
 import { useEffect, useState } from 'react'
 import { getInventory } from '@api/StoreApi'
 import { DataTable } from '@components/ui/table/data-table'
@@ -6,18 +5,6 @@ import {
   MainInventoryColumns,
   StoreInventory,
 } from '@components/ui/table/columns'
-
-interface StoreInventoryProps {
-  numSelected: number
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property: keyof StoreInventory,
-  ) => void
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void
-  order: Order
-  orderBy: string
-  rowCount: number
-}
 
 export default function MainTable() {
   const [inventory, setInventory] = useState<StoreInventory[]>([])

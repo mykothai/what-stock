@@ -15,136 +15,20 @@ import {
   SidebarMenuSubItem,
   SidebarRail,
 } from '@components/ui/sidebar'
-import { ChevronUp, House, Settings, Tally5, Toilet } from 'lucide-react'
+import { ChevronUp, House, Settings } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@components/ui/dropdown-menu'
-import eBayLogo from '@assets/images/eBayLogo-4Color-RGB.png'
-import blLogo from '@assets/images/BrickLink_glyph.png'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ModeToggle } from '@components/mode-toggle'
-
-interface BaseSidebarItem {
-  title: string
-  url?: string
-  icon?: React.ReactNode
-}
-
-interface ParentSidebarItem extends BaseSidebarItem {
-  items: ChildSidebarItem[]
-}
-
-interface ChildSidebarItem extends BaseSidebarItem {
-  isActive: boolean
-  items?: ChildSidebarItem[]
-}
-
-interface SidebarNavMenu {
-  navMain: ParentSidebarItem[]
-}
-
-const data: SidebarNavMenu = {
-  navMain: [
-    {
-      title: 'What The Stock?',
-      url: '#',
-      items: [
-        {
-          title: 'Everything',
-          url: '#',
-          isActive: false,
-          icon: <Tally5 />,
-        },
-        {
-          title: 'Categories',
-          url: '#',
-          isActive: false,
-          icon: <Toilet />,
-          items: [
-            {
-              title: 'Lego',
-              url: '#',
-              isActive: false,
-              icon: <Toilet />,
-            },
-            {
-              title: 'Hot Wheels',
-              url: '#',
-              isActive: false,
-              icon: <Toilet />,
-            },
-            {
-              title: 'T-Shirts',
-              url: '#',
-              isActive: false,
-              icon: <Toilet />,
-            },
-            {
-              title: 'Lanyards',
-              url: '#',
-              isActive: false,
-              icon: <Toilet />,
-            },
-            {
-              title: 'Others',
-              url: '#',
-              isActive: false,
-              icon: <Toilet />,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      title: 'BrickLink',
-      icon: (
-        <img className="w-6 h-6" src={blLogo} alt="bl logo" loading="lazy" />
-      ),
-      items: [
-        {
-          title: 'Inventory',
-          url: 'bl-inventory',
-          isActive: false,
-          icon: <Toilet />,
-        },
-        {
-          title: 'Sales',
-          url: 'bl-sales',
-          isActive: false,
-          icon: <Toilet />,
-        },
-      ],
-    },
-    {
-      title: 'eBay',
-      icon: (
-        <img
-          className="w-6 h-6 scale-250"
-          src={eBayLogo}
-          alt="eBay logo"
-          loading="lazy"
-        />
-      ),
-      items: [
-        {
-          title: 'Inventory',
-          url: 'eb-inventory',
-          isActive: false,
-          icon: <Toilet />,
-        },
-        {
-          title: 'Sales',
-          url: 'eb-sales',
-          isActive: false,
-          icon: <Toilet />,
-        },
-      ],
-    },
-  ],
-}
+import {
+  ChildSidebarItem,
+  ParentSidebarItem,
+  sidebarNavItems,
+} from './sidebar-items'
 
 const renderSidebarItems = (items: ChildSidebarItem[]) => {
   const location = useLocation()
@@ -167,11 +51,7 @@ const renderSidebarItems = (items: ChildSidebarItem[]) => {
                 asChild
                 isActive={subItem.isActive}
                 onClick={() => navigate(subItem.url!)}
-                className={`flex items-center gap-2 ${
-                  location.pathname === subItem.url
-                    ? 'bg-primary text-white'
-                    : 'hover:bg-gray-00'
-                }`}>
+                className="flex items-center gap-2 cursor-pointer hover:cursor-pointer">
                 <div>
                   {subItem.icon}
                   <span>{subItem.title}</span>
@@ -190,12 +70,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
-        <SidebarMenuButton onClick={() => navigate('/')}>
+        <SidebarMenuButton
+          className="cursor-pointer hover:cursor-pointer"
+          onClick={() => navigate('/')}>
           <House /> What the Stock?
         </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
-        {data.navMain.map((group: ParentSidebarItem) => (
+        {sidebarNavItems.navMain.map((group: ParentSidebarItem) => (
           <SidebarGroup key={group.title}>
             {group.icon && (
               <SidebarGroupLabel className="flex items-center gap-2">
